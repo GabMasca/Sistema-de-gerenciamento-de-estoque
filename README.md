@@ -1,4 +1,4 @@
-# Sistema-de-gerenciamento-de-estoque
+# Sistema-de-gerenciamento-de-eventos
 O programa é um sistema de gerenciamento de eventos, escrito em Python, que
 permite aos usuários cadastrar eventos, visualizar detalhes, inscrever participantes,
 e gerenciar as inscrições. Ele funciona por meio de um menu interativo, onde os
