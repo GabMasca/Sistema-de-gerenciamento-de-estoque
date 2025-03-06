@@ -1,0 +1,139 @@
+# Dicionários para eventos e inscrições
+eventos = {}
+inscricoes = {}
+
+# configurações de exibição do menu
+def exibir_menu():
+    print("\n--- Gerenciamento de Eventos ---")
+    print("1. Cadastrar novo evento.")
+    print("2. Atualizar eventos.")
+    print("3. Visualizar eventos cadastrados.")
+    print("4. Se inscrever em um evento.")
+    print("5. Visualizar inscritos.")
+    print("6. Excluir eventos.")
+    print("7. Sair.")
+
+#Descrição de cada função
+
+
+#Pede os dados do evento e os registra
+def cadastrar_evento():
+    print("\n--- Cadastrar Evento ---")
+    nome = input("Nome do evento: ")
+    if nome in eventos:
+        print(f"Evento '{nome}' já cadastrado.")
+    else:
+        try:
+            data = input("Data do evento (dd/mm/aaaa): ")
+            descricao = input("Insira uma descrição: ")
+            vagas = int(input("Quantidade de vagas disponíveis: "))
+            eventos[nome] = {"data": data, "descrição": descricao, "vagas": vagas, "inscritos": 0}
+            print(f"Evento '{nome}' cadastrado com sucesso!")
+        except ValueError:
+            print("Formato inválido, utilize somente números.")
+
+
+
+#Pede o nome do evento, verifica se exite, solicita novos dados do evento e os registra. Caso não exista evento com o nome, printa mensagem avisando.
+def atualizar_eventos():
+    print("\n--- Atualizar Evento ---")
+    nome = input("Digite o nome do evento: ")
+    if nome in eventos:
+        try:
+            data = input(f"Digite a nova data do evento '{nome}' (dd/mm/aaaa): ")
+            descricao = input(f"Insira uma nova descrição para o evento '{nome}': ")
+            vagas = int(input(f"Digite a nova quantidade de vagas disponíveis para o evento '{nome}': "))
+            eventos[nome].update({"data": data, "descrição": descricao, "vagas": vagas})
+            print(f"Evento '{nome}' atualizado com sucesso!")
+        except ValueError:
+            print("Formato inválido, utilize somente números.")
+    else:
+        print(f"Evento '{nome}' não encontrado.")
+
+
+#Verifica se exitem eventos, e, caso existam mostra em forma de lista, caso não existam, printa mensagem avisando.
+def visualizar_eventos():
+    print("\n--- Eventos Disponíveis ---")
+    if not eventos:
+        print("Nenhum evento cadastrado.")
+        return
+    
+    for nome, detalhes in eventos.items():
+        vagas_restantes = detalhes["vagas"] - detalhes["inscritos"]
+        print(f"Nome: {nome}")
+        print(f"Data: {detalhes['data']}")
+        print(f"Descrição: {detalhes['descrição']}")
+        print(f"Vagas restantes: {vagas_restantes}")
+        print("-" * 40)
+
+#Pede o nome do evento, verifica se exite, verifica se existem vagas e, se houver, registra o nome na lista de participantes. Caso não exista evento com o nome ou não houverem vagas, printa mensagem avisando.
+
+def inscrever_evento():
+    nome = input("Digite o nome do evento que deseja se inscrever: ")
+    if nome not in eventos:
+        print("Evento não existente.")
+        return
+
+    evento = eventos[nome]
+    if evento["inscritos"] >= evento["vagas"]:
+        print("Não há vagas neste evento.")
+        return
+
+    participante = input("Nome do participante: ")
+
+    if nome not in inscricoes:
+        inscricoes[nome] = []
+    
+    inscricoes[nome].append(participante)
+    evento["inscritos"] += 1
+    print(f"Inscrição realizada com sucesso para {participante} no evento '{nome}'!")
+
+
+#Pede o nome do evento, verifica se exite, e lista os participantes. Caso não exista ou caso não haja participantes inscritos, printa mensagem avisando.
+def visualizar_inscritos():
+    print("\n--- Lista de Inscritos ---")
+    nome = input("Digite o nome do evento: ")
+    if nome not in eventos:
+        print("Evento não cadastrado.")
+        return
+    if nome not in inscricoes or not inscricoes[nome]:
+        print("Nenhum participante inscrito neste evento.")
+        return
+    
+    print(f"Participantes inscritos no evento '{nome}':")
+    for participante in inscricoes[nome]:
+        print(f"- {participante}")
+#Pede o nome do evento, e, caso exista, o remove. Se não existir, printa mensagem avisando.
+def remover_evento():
+    print("\n--- Remover Evento ---")
+    nome = input("Nome do evento a ser removido: ")
+    if nome not in eventos:
+        print("Erro: Evento não encontrado.")
+        return
+    
+    del eventos[nome]
+    inscricoes.pop(nome, None)  
+    print(f"Evento '{nome}' removido com sucesso!")
+
+# Loop principal do sistema para que as opções funcionem
+while True:
+    exibir_menu()
+    opcao = input("Escolha uma opção: ")
+    
+    if opcao == "1":
+        cadastrar_evento()
+    elif opcao == "2":
+        atualizar_eventos()
+    elif opcao == "3":
+        visualizar_eventos()
+    elif opcao == "4":
+        inscrever_evento()
+    elif opcao == "5":
+        visualizar_inscritos()
+    elif opcao == "6":
+        remover_evento()
+    elif opcao == "7":
+        print("Encerrando o sistema. Até logo!")
+        break
+    else:
+        print("Opção inválida. Tente novamente.")
